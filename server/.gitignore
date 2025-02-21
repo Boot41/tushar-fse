@@ -1,0 +1,10 @@
+# Django server ignore patterns
+__pycache__/
+*.py[cod]
+.env
+*.sqlite3
+media/
+staticfiles/
+*.pot
+*.pyc
+*.egg-info/
