@@ -1,42 +1,23 @@
-# Use Node.js 21 Alpine as the base image
+# Use an official Node.js runtime as the base image
 FROM node:21-alpine
 
-# Install system dependencies
-RUN apk add --no-cache \
-    python3 \
-    make \
-    g++ \
-    jpeg-dev \
-    cairo-dev \
-    pango-dev \
-    giflib-dev
-
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package files
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Create upload directory and set permissions
-RUN mkdir -p uploads && chown -R node:node uploads
+# Install MongoDB client tools (optional, for debugging or manual operations)
+RUN apk add --no-cache mongodb-tools
 
-# Copy application files
+# Copy the rest of the application code
 COPY . .
 
-# Create a .env file if it doesn't exist
-RUN touch .env
-
-# Switch to non-root user
-USER node
-
-# Expose port
+# Expose the port your app will run on
 EXPOSE 5000
 
-# Start the application with no deprecation warnings
-CMD ["node", "--no-deprecation", "index.js"]
-
-# Start application
+# Command to run the application
 CMD ["node", "index.js"]
